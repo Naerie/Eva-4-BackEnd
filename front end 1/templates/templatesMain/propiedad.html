@@ -1,0 +1,156 @@
+{% extends 'templatesMain/base-cliente.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container my-5">
+  <!-- CUADRO BLANCO PRINCIPAL -->
+  <div class="card shadow-lg border-0 p-4">
+    <div class="row g-4 align-items-start">
+      
+      <!-- COLUMNA IZQUIERDA: IMAGEN + INFO -->
+      <div class="col-lg-8">
+        <!-- Título -->
+        <h2 class="fw-bold mb-3">{{ propiedad.titulo }}</h2>
+
+        <!-- Carrusel -->
+        <div id="propertyCarousel" class="carousel slide shadow rounded mb-4" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="{{ propiedad.thumb.url }}" class="d-block w-100 rounded" alt="{{ propiedad.titulo }}">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        </div>
+
+        <!-- Descripción -->
+        <p class="lead mb-4">{{ propiedad.descripcion }}</p>
+
+        <!-- Detalles de la propiedad -->
+        <div class="card border-0 mb-4 bg-light">
+          <div class="card-body rounded shadow-sm">
+            <h5 class="fw-bold mb-3"><i class="bi bi-info-circle-fill me-2 text-primary"></i>Detalles de la propiedad</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Dirección:</strong> {{ propiedad.ubicacion }}</p>
+                <p><strong>Habitaciones:</strong> {{ propiedad.nHabitaciones }}</p>
+                <p><strong>Baños:</strong> {{ propiedad.nBanos }}</p>
+                <p><strong>Superficie total:</strong> {{ propiedad.superficie }} m²</p>
+                <p><strong>Superficie construida:</strong> {{ propiedad.superficieConstruida }} m²</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Precio:</strong> 
+                  <span class="text-success fw-bold">{{ propiedad.precio }} {{ propiedad.moneda }}</span>
+                </p>
+                {% if propiedad.estacionamiento %}
+                <p><strong>Estacionamientos:</strong> {{ propiedad.nEstacionamientos }}</p>
+                {% else %}
+                <p><strong>Estacionamientos:</strong> No</i></p>
+                {% endif %}
+                <p><strong>Fecha de publicación:</strong> {{ propiedad.fecha|date:"d/m/Y" }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extras -->
+        <div class="card border-0 mb-4 bg-light">
+          <div class="card-body rounded shadow-sm">
+            <h5 class="fw-bold mb-3"><i class="bi bi-stars me-2 text-primary"></i>Características adicionales</h5>
+            <div class="row text-muted">
+              {% if propiedad.piscina %}<div class="col-md-6"><i class="bi bi-droplet text-primary"></i> Piscina</div>{% endif %}
+              {% if propiedad.conserje %}<div class="col-md-6"><i class="bi bi-person-badge text-primary"></i> Conserje</div>{% endif %}
+              {% if propiedad.logia %}<div class="col-md-6"><i class="bi bi-box2 text-primary"></i> Logia</div>{% endif %}
+              {% if propiedad.amoblado %}<div class="col-md-6"><i class="bi bi-house-heart text-primary"></i> Amoblado</div>{% endif %}
+              {% if propiedad.estacionamiento %}<div class="col-md-6"><i class="bi bi-car-front text-primary"></i> Estacionamiento</div>{% endif %}
+              {% if not propiedad.piscina and not propiedad.conserje and not propiedad.logia and not propiedad.amoblado and not propiedad.estacionamiento %}
+                <p class="text-muted">Esta propiedad no cuenta con características adicionales destacadas.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA: FORMULARIO + MAPA -->
+      <div class="col-lg-4">
+        <!-- Formulario de contacto -->
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <h5 class="card-title mb-3 text-center">¿Estás interesado?</h5>
+            <form method="POST" novalidate>
+              {% csrf_token %}
+              <!-- Campo Nombre -->
+              <div class="mb-3">
+                <label for="{{ form.nombreCliente.id_for_label }}" class="form-label">{{ form.nombreCliente.label }}</label>
+                {{ form.nombreCliente }}
+                {% if form.nombreCliente.errors %}
+                  {% for error in form.nombreCliente.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+
+              <!-- Campo Email -->
+              <div class="mb-3">
+                <label for="{{ form.emailCliente.id_for_label }}" class="form-label">{{ form.emailCliente.label }}</label>
+                {{ form.emailCliente }}
+                {% if form.emailCliente.errors %}
+                  {% for error in form.emailCliente.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+
+              <!-- Campo Teléfono -->
+              <div class="mb-3">
+                <label for="{{ form.nTelefonoCliente.id_for_label }}" class="form-label">{{ form.nTelefonoCliente.label }}</label>
+                {{ form.nTelefonoCliente }}
+                {% if form.nTelefonoCliente.errors %}
+                  {% for error in form.nTelefonoCliente.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+
+              <!-- Botón -->
+              <button type="submit" class="btn btn-primary w-100">Enviar</button>
+
+              <p class="text-muted small mt-2 text-center">
+                Te contactaremos lo antes posible.
+              </p>
+            </form>
+          </div>
+        </div>
+
+
+        <!-- Mapa -->
+        <div class="card shadow-sm">
+          <div class="card-body p-0">
+            <div id="map" style="height: 300px; border-radius: 0.5rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  var map = L.map('map').setView([-27.3668, -70.3322], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+  L.marker([-27.3668, -70.3322]).addTo(map)
+    .bindPopup("{{ propiedad.titulo }}<br>{{ propiedad.ubicacion }}")
+    .openPopup();
+</script>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% load static %}
+
+<!-- BARRA SUPERIOR con logo nuevo -->
+<div class="top-bar py-2 px-4 d-none d-md-flex justify-content-between align-items-center">
+  <div class="d-flex align-items-center gap-4">
+    <a class="navbar-brand ml-1" href="{% url 'home' %}">
+      <img src="{% static 'assets/img/logo2.png' %}" alt="Logo" width="300" height="99">
+    </a>
+    
+  </div>
+</div>
+
+<!-- NAV PRINCIPAL -->
+<nav class="navbar navbar-expand-lg navbar-dark main-nav shadow-sm sticky-top">  
+  <div class="container-fluid px-4 py-2">
+    
+      <!-- hamburguesa -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+      <ul class="navbar-nav align-items-lg-center">
+        <!-- home -->
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Inicio</a>
+        </li>
+        <!-- propiedaes
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name in 'venta arriendo' %}active{% endif %}"
+            href="#" id="propiedadesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Propiedades
+          </a>
+          <ul class="dropdown-menu border-0 shadow-sm">
+            <li><a class="dropdown-item" href="#">Venta</a></li>
+            <li><a class="dropdown-item" href="#">Arriendo</a></li>
+          </ul>
+        </li> -->
+          <!-- about -->
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">Quiénes Somos</a>
+        </li>
+        <!-- contacto -->
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'contacto' %}active{% endif %}" href="{% url 'contacto' %}">Contacto</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

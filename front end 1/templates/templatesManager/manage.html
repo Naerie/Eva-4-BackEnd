@@ -1,0 +1,74 @@
+<!-- HOME MANAGER -->
+
+{% extends "templatesManager/base-admin.html"%}
+{% load static %}
+
+{% block title %} SERVICOPIAPO GESTION {% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Encabezado -->
+  <div class="mb-4">
+    <p class="text-muted">Panel de administración de servicopiapo propiedades.</p>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">Propiedades</h5>
+          <p class="card-text">Administra las propiedades disponibles para arriendo o venta.</p>
+          <a href="{%url 'listado-propiedades'%}" class="btn btn-primary">Ver propiedades</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">Contactos</h5>
+          <p class="card-text">Revisa y gestiona los mensajes recibidos.</p>
+          <a href="{%url 'ver-contacto' %}" class="btn btn-primary">Ver solicitudes de mensajes</a>
+        </div>
+      </div>
+    </div>
+
+  <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">Gestionar</h5>
+          <p class="card-text">Agrega, visualiza y gestiona los tipos de propiedades, disponibilidad y operaciones en el sistema.</p>
+          <a href="{%url 'gestion' %}" class="btn btn-primary">Gestionar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="row g-2">
+  <!-- Card Personas Interesadas -->
+  <div class="col-md-4 mt-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Personas Interesadas</h5>
+        <p class="card-text">Visualiza y gestiona la lista de personas interesadas.</p>
+        <a href="{%url 'tabla-interes' %}" class="btn btn-primary">Ver</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUEVA Card Subscripciones -->
+  <div class="col-md-4 mt-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <!-- Título de la card -->
+        <h5 class="card-title">Suscripciones</h5>
+        <!-- Texto descriptivo -->
+        <p class="card-text">Consulta y administra las suscripciones registradas en el sistema.</p>
+        <!-- Botón que redirige a la vista correspondiente -->
+        <a href="{% url 'ver-suscripciones' %}" class="btn btn-primary">Ver suscripciones</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

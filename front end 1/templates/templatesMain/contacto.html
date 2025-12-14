@@ -1,0 +1,63 @@
+{% extends 'templatesMain/base-cliente.html'%}
+{% load static %}
+
+{% block title %}CONTÁCTANOS{% endblock %}
+
+{% block content %}
+
+<section class="section-hero text-center">
+  <div class="container">
+    <h1 class="display-5 fw-bold text-white mb-2">CONTÁCTANOS</h1>
+    <p class="lead text-light">¿Tienes dudas o quieres más información? Envíanos un mensaje y te responderemos pronto.</p>
+  </div>
+</section>
+
+<section class="section-content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <form method="POST" novalidate class="form-styled p-4">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            {{ form.nombre.label_tag }}
+            {{ form.nombre }}
+            {% for error in form.nombre.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% for error in form.email.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.nTelefono.label_tag }}
+            {{ form.nTelefono }}
+            {% for error in form.nTelefono.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-4">
+            {{ form.mensaje.label_tag }}
+            {{ form.mensaje }}
+            {% for error in form.mensaje.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-naranjo btn-lg px-5">Enviar mensaje</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

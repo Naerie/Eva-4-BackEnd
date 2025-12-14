@@ -1,0 +1,97 @@
+{% extends 'templatesManager/base-admin.html' %}
+{% block title %}PROPIEDADES{% endblock %}
+
+{% block content %}
+<h2>Gestión de propiedades</h2>
+<p class="text-muted">Panel de gestión de propiedades.</p>
+
+<a href="{% url 'registro-propiedades' %}" class="btn btn-primary btn-lg mb-4">
+  Agregar propiedad
+</a>
+<div class="container">
+  <div class="row">
+    <!-- card start -->
+    {% for p in propiedades %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm border-0 rounded-3">
+      <img src="{{ p.obj.thumb.url }}" class="card-img-top" alt="{{ p.obj.titulo }}">
+
+      <div class="card-body">
+        <h5 class="card-title">{{ p.obj.titulo }}</h5>
+
+        {% if p.obj.ubicacion %}
+          <p class="text-muted small mb-2">
+            <i class="bi bi-geo-alt"></i> {{ p.obj.ubicacion }}
+          </p>
+        {% endif %}
+
+        {% if p.obj.descripcion %}
+          <p class="card-text text-secondary small mb-3">{{ p.obj.descripcion|truncatechars:120 }}</p>
+        {% endif %}
+
+        <ul class="list-unstyled small mb-3">
+          {% if p.obj.nHabitaciones %}
+            <li><i class="bi bi-door-closed"></i> Habitaciones: {{ p.obj.nHabitaciones }}</li>
+          {% endif %}
+          {% if p.obj.nBanos %}
+            <li><i class="bi bi-droplet"></i> Baños: {{ p.obj.nBanos }}</li>
+          {% endif %}
+          {% if p.obj.superficie %}
+            <li><i class="bi bi-rulers"></i> Total: {{ p.obj.superficie }} m²</li>
+          {% endif %}
+          {% if p.obj.superficieConstruida %}
+            <li><i class="bi bi-building"></i> Construida: {{ p.obj.superficieConstruida }} m²</li>
+          {% endif %}
+        </ul>
+
+        {% if p.obj.conserje or p.obj.logia or p.obj.amoblado or p.obj.estacionamiento or p.obj.piscina %}
+          <h6 class="mb-1">Extras:</h6>
+          <ul class="list-inline small text-muted mb-3">
+            {% if p.obj.conserje %}<li class="list-inline-item"><i class="bi bi-person-badge"></i> Conserje</li>{% endif %}
+            {% if p.obj.logia %}<li class="list-inline-item"><i class="bi bi-basket"></i> Logia</li>{% endif %}
+            {% if p.obj.amoblado %}<li class="list-inline-item"><i class="bi bi-lamp"></i> Amoblado</li>{% endif %}
+            {% if p.obj.estacionamiento %}
+              <li class="list-inline-item">
+                <i class="bi bi-car-front"></i> {{ p.obj.nEstacionamientos }} estacionamiento{{ p.obj.nEstacionamientos|pluralize }}
+              </li>
+            {% endif %}
+            {% if p.obj.piscina %}<li class="list-inline-item"><i class="bi bi-water"></i> Piscina</li>{% endif %}
+          </ul>
+        {% endif %}
+
+        {% if p.obj.precio %}
+          <p class="fw-bold mb-1">
+            <i class="bi bi-currency-exchange"></i>
+            {% if p.obj.moneda == 'CLP' %}
+              $ {{ p.obj.precio }}
+            {% else %}
+              {{ p.obj.precio }} UF
+            {% endif %}
+          </p>
+        {% endif %}
+
+        {% if p.obj.fecha %}
+          <p class="text-muted small mb-3"><i class="bi bi-calendar-event"></i> {{ p.obj.fecha|date:"d/m/Y" }}</p>
+        {% endif %}
+
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalActualizar{{ p.obj.id }}">
+            <i class="bi bi-pencil-square"></i> Actualizar
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar{{ p.obj.id }}">
+            <i class="bi bi-trash3"></i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODALS -->
+    {% include 'templatesManager/modal-actualizar.html' with item=p.obj form=p.form %}
+    {% include 'templatesManager/modal-eliminar.html' with item=p.obj tipo="propiedad" url_name="eliminar-propiedad" %}
+  </div>
+{% endfor %}
+
+
+  </div>
+</div>
+{%endblock%}

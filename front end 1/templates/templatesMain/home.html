@@ -1,0 +1,151 @@
+<!-- pagina home clientes -->
+
+<!-- herencia para la pagina base-cliente -->
+{% extends "templatesMain/base-cliente.html" %}
+{% load static %}
+<!-- cambio de titulo de la pagina -->
+{% block title %}SERVICOPIAPO PROPIEDADES {% endblock %}
+
+
+<!-- prueba de contenido dinamico -->
+{% block content %}
+<!-- Carrusel -->
+<div id="carouselExampleFade" class="carousel slide carousel-fade w-100" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'assets/img/banner.png' %}" class="d-block w-100" alt="">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'assets/img/banner2.png' %}" class="d-block w-100" alt="">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+
+
+<!-- BARRA DE BÚSQUEDA -->
+<section class="search-section">
+  <div class="container">
+    <form class="row g-2 align-items-center justify-content-center" method="get" action=".">
+      
+      <!-- Operación -->
+      <div class="col-12 col-md-auto">
+        <select class="form-select search-input" name="operacion">
+          <option value="">Operación</option>
+          {% for o in operacion %}
+            <option value="{{ o.id }}" {% if request.GET.operacion == o.id|stringformat:"s" %}selected{% endif %}>
+              {{ o.operacion }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Tipo de propiedades -->
+      <div class="col-12 col-md-auto">
+        <select class="form-select search-input" name="tipo">
+          <option value="">Tipo de inmueble</option>
+          {% for t in tipos_propiedades %}
+            <option value="{{ t.id }}" {% if request.GET.tipo == t.id|stringformat:"s" %}selected{% endif %}>
+              {{ t.tipoPropiedad }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Comuna -->
+      <div class="col-12 col-md-auto">
+        <select class="form-select search-input" name="comuna">
+          <option value="">Comuna</option>
+          {% for c in comuna %}
+            <option value="{{ c.id }}" {% if request.GET.comuna == c.id|stringformat:"s" %}selected{% endif %}>
+              {{ c.comuna }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Botones -->
+      <div class="col-12 col-md-auto d-flex gap-2">
+        <button type="submit" class="btn btn-naranjo btn-lg">Buscar</button>
+        <a href="{% url 'home' %}" class="btn btn-outline-light btn-lg">Limpiar</a>
+      </div>
+
+    </form>
+  </div>
+</section>
+<!-- FIN BARRA DE BÚSQUEDA -->
+
+
+
+ <!-- SECCIÓN PROPIEDADES -->
+<section class="propiedades-section py-4">
+  <div class="container">
+    <div class="row">
+      {% for p in propiedades %}
+      <div class="col-md-4 mb-4">
+        <a href="{% url 'detalle-propiedad' p.slug %}" class="text-decoration-none text-dark">
+          <div class="card h-100 shadow-sm border-0 rounded-3">
+            <img src="{{ p.thumb.url }}" class="card-img-top" alt="{{ p.titulo }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ p.titulo }}</h5>
+              {% if p.ubicacion %}
+                <p class="text-muted small mb-2">
+                  <i class="bi bi-geo-alt"></i> {{ p.ubicacion }}
+                </p>
+              {% endif %}
+              {% if p.precio %}
+                <p class="fw-bold text-primary mb-0">
+                  {{ p.moneda }} {{ p.precio }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+        <p>No hay propiedades disponibles.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- FIN SECCIÓN PROPIEDADES -->
+
+<!-- SECCIÓN NEWSLETTER -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="row align-items-center gy-3">
+      <div class="col-12 col-lg-7">
+        <h2 class="newsletter-title">INSCRÍBETE AL NEWSLETTER</h2>
+        <p class="newsletter-text">
+          Inscríbete a nuestro Newsletter para recibir las últimas noticias sobre las propiedades que más te interesan.
+        </p>
+      </div>
+      <div class="col-12 col-lg-5">
+        <form method="POST" action="#" id="formSuscripcion" class="newsletter-form">
+          {% csrf_token %}
+          <!-- tu campo ya viene del form; lo envolvemos y estilizamos por CSS -->
+          {{ form.emailSus }}
+          <button class="btn btn-naranjo btn-lg w-auto" type="submit">Suscribirme</button>
+        </form>
+        {% if form.emailSus.errors %}
+          <div class="text-danger small mt-2">
+            {{ form.emailSus.errors }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FIN SECCIÓN NEWSLETTER -->
+
+</div>
+
+{% endblock %}

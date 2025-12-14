@@ -1,0 +1,66 @@
+{% extends 'templatesManager/base-admin.html' %}
+{%block title%}Gestion de suscripciones {%endblock%}
+
+{%block content%} 
+<div class="container mt-5">
+  <h2>Suscripciones</h2>
+
+  <!-- Tabla Subscripciones Activas -->
+<div class="mb-5">
+    <h4>Activas</h4>
+    <table class="table table-striped table-bordered shadow-sm">
+      <thead class="table-success">
+        <tr>
+          <th>Correo</th>
+          <th>Fecha Suscripción</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in suscripciones %}
+          {% if s.estadoSus %}
+          <tr>
+            <td>{{ s.emailSus }}</td>
+            <td>{{ s.fechaSus }}</td>
+            <td><span class="badge bg-success">Activa</span></td>
+          </tr>
+          {% endif %}
+        {% empty %}
+          <tr>
+            <td colspan="3" class="text-center text-muted">No hay suscripciones activas.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+  <!-- Tabla Subscripciones Canceladas -->
+  <div>
+    <h4>Canceladas</h4>
+    <table class="table table-striped table-bordered shadow-sm">
+      <thead class="table-danger">
+        <tr>
+          <th>Correo</th>
+          <th>Fecha Suscripción</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in suscripciones %}
+          {% if not s.estadoSus %}
+          <tr>
+            <td>{{ s.emailSus }}</td>
+            <td>{{ s.fechaSus }}</td>
+            <td><span class="badge bg-danger">Cancelada</span></td>
+          </tr>
+          {% endif %}
+        {% empty %}
+          <tr>
+            <td colspan="3" class="text-center text-muted">No hay suscripciones canceladas.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{%endblock%}

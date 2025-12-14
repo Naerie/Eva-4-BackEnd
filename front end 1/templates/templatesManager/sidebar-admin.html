@@ -1,0 +1,48 @@
+{% load static %}
+<div class="d-flex flex-column p-3 text-bg-dark"
+     style="width: 280px; height: 100vh; position: fixed; overflow-y: auto;">
+  
+  <!-- Branding -->
+  <a href="{% url 'home-manager' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <span class="fs-4">PANEL DE ADMINISTRACION</span>
+  </a>
+
+  <hr>
+
+  <!-- Menú -->
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a href="{% url 'home-manager' %}" 
+      class="nav-link {% if request.resolver_match.url_name == 'home-manager' %}active text-white{% else %}text-white{% endif %}">Inicio</a>
+    </li>
+    <li><a href="{% url 'listado-propiedades'%}" class="nav-link {% if request.resolver_match.url_name == 'listado-propiedades' %}active text-white{% else %}text-white{% endif %}">Propiedades</a></li>
+    <li><a href="{% url 'registro-propiedades'%}" class="nav-link {% if request.resolver_match.url_name == 'registro-propiedades' %}active text-white{% else %}text-white{% endif %}">Agregar propiedades</a></li>
+    <li><a href="{% url 'ver-contacto'%}" class="nav-link {% if request.resolver_match.url_name == 'ver-contacto' %}active text-white{% else %}text-white{% endif %}">Solicitudes de contacto</a></li>
+        <li><a href="{% url 'gestion'%}" class="nav-link {% if request.resolver_match.url_name == 'gestion' %}active text-white{% else %}text-white{% endif %}">Gestion</a></li>
+    <li><a href="{% url 'tabla-interes'%}" class="nav-link {% if request.resolver_match.url_name == 'tabla-interes' %}active text-white{% else %}text-white{% endif %}">Interesados</a></li>
+      <li><a href="{% url 'ver-suscripciones'%}" class="nav-link {% if request.resolver_match.url_name == 'ver-suscripciones' %}active text-white{% else %}text-white{% endif %}">Suscripciones</a></li>
+  </ul>
+
+  <hr>
+
+  <!-- Usuario abajo -->
+  <div class="dropdown">
+    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+       data-bs-toggle="dropdown" aria-expanded="false">
+      <img src="{% static 'assets/img/logo.png'%}" alt="avatar" width="32" height="32" class="rounded-circle me-2">
+      <strong>Admin</strong>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+      <li><a class="dropdown-item" href="/" target="_blank" rel="noopener noreferrer">Ver como cliente</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="/admin" target="_blank" rel="noopener noreferrer">Django admin</a></li>
+      <li><hr class="dropdown-divider"></li>
+        <li>
+          <form action="{% url 'logout' %}" method="POST" class="m-0">
+            {% csrf_token %}
+            <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+          </form>
+        </li>
+    </ul>
+  </div>
+</div>

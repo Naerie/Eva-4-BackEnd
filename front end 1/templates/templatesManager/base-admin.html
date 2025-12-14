@@ -1,0 +1,33 @@
+<!-- cargar static -->
+{% load static %}
+
+<!-- codigo base-admin.html -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- titulo dinamico -->
+    <title>{%block title %}SERVICOPIAPO{% endblock %}</title>
+<!-- bootstrap link css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <!-- icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- SCRIPT JS DE BOOTSTRAP -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="d-flex">
+        <!-- SIDEBAR -->
+        {% include 'templatesManager/sidebar-admin.html' %}
+
+        <!-- CONTENIDO -->
+        <div class="flex-grow-1" style="margin-left: 280px; padding: 20px;">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+
+</html>

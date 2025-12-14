@@ -1,0 +1,23 @@
+<div class="modal fade" id="modalEliminar{{ item.id }}" tabindex="-1" aria-labelledby="modalEliminarLabel{{ item.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-sm">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="modalEliminarLabel{{ item.id }}">Eliminar {{ tipo|default:"elemento" }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar este {{ tipo|default:"elemento" }}?
+          <strong>{% firstof item.tipoPropiedad item.operacion item.nombre item.titulo item.nombreCliente item.comuna item.estado item %}</strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+        <form method="POST"
+              action="{% if campo %}{% url url_name campo item.id %}{% else %}{% url url_name item.id %}{% endif %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

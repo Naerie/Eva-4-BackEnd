@@ -1,0 +1,20 @@
+{% extends 'templatesManager/base-admin.html' %}
+{% load static %}
+
+{% block title %}Gestión de Inmuebles{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+{% include 'templatesManager/gestion/crudTipop.html' %}
+
+{% include 'templatesManager/gestion/crudDisponibilidad.html' %}
+
+{% include 'templatesManager/gestion/crudOperaciones.html' %}
+
+{% include 'templatesManager/gestion/crudComuna.html' %}
+
+
+</div>
+
+{% endblock %}

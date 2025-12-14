@@ -1,0 +1,147 @@
+<h4 class="mb-3">Información general</h4>
+
+<div class="mb-3">
+    {{ form.titulo.label_tag }}
+    {{ form.titulo }}
+</div>
+
+<div class="mb-3">
+    {{ form.descripcion.label_tag }}
+    {{ form.descripcion }}
+</div>
+
+<div class="mb-3">
+    {{ form.thumb.label_tag }}
+    {{ form.thumb }}
+</div>
+
+<div class="mb-3">
+    {{ form.ubicacion.label_tag }}
+    {{ form.ubicacion }}
+</div>
+
+<h4 class="mb-3">Clasificación</h4>
+
+<div class="row mb-3 g-2">
+    <div class="col-md-6">
+        {{ form.comuna.label_tag }}
+        {{ form.comuna }}
+        {% for error in form.comuna.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        {{ form.tipo_propiedad.label_tag }}
+        {{ form.tipo_propiedad }}
+        {% for error in form.tipo_propiedad.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row mb-3 g-2">
+    <div class="col-md-6">
+        {{ form.operacion.label_tag }}
+        {{ form.operacion }}
+        {% for error in form.operacion.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        {{ form.estado.label_tag }}
+        {{ form.estado }}
+        {% for error in form.estado.errors %}
+        <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<div class="row mb-3 g-2">
+    <div class="col-auto">
+        {{ form.superficie.label_tag }}
+        {{ form.superficie }}
+    </div>
+    <div class="col-auto">
+        {{ form.superficieConstruida.label_tag }}
+        {{ form.superficieConstruida }}
+        {% for error in form.superficieConstruida.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row mb-3 g-2">
+    <div class="col-auto">
+        {{ form.nHabitaciones.label_tag }}
+        {{ form.nHabitaciones }}
+    </div>
+</div>
+
+<div class="row mb-3 g-2">
+    <div class="col-auto">
+        {{ form.nBanos.label_tag }}
+        {{ form.nBanos }}
+    </div>
+</div>
+
+<div class="row mb-3 g-2 align-items-end">
+    <div class="col-auto">
+        {{ form.precio.label_tag }}
+        {{ form.precio }}
+        {% for error in form.precio.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-auto d-flex align-items-center">
+        {% for radio in form.moneda %}
+            <div class="form-check form-check-inline">
+                {{ radio.tag }}
+                {{ radio.choice_label }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<h4 class="mb-3">Características adicionales</h4>
+
+<div class="row mb-3 g-3">
+    <div class="col-md-6">
+        <div class="form-check">
+            {{ form.piscina }}
+            {{ form.piscina.label_tag }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-check">
+            {{ form.conserje }}
+            {{ form.conserje.label_tag }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-check">
+            {{ form.logia }}
+            {{ form.logia.label_tag }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-check">
+            {{ form.amoblado }}
+            {{ form.amoblado.label_tag }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-check">
+            {{ form.estacionamiento }}
+            {{ form.estacionamiento.label_tag }}
+        </div>
+        <div class="mt-2">
+            {{ form.nEstacionamientos.label_tag }}
+            {{ form.nEstacionamientos }}
+            {% for error in form.nEstacionamientos.errors %}
+            <div class="invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+

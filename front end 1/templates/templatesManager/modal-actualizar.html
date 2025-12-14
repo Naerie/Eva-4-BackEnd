@@ -1,0 +1,20 @@
+<!-- Modal Actualizar -->
+<div class="modal fade" id="modalActualizar{{ item.id }}" tabindex="-1" aria-labelledby="modalActualizarLabel{{ item.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Actualizar Propiedad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'actualizar-propiedad' item.id %}">
+          {% csrf_token %}
+          {% include 'templatesManager/formRegistroP.html' with form=form %}
+          <div class="mt-3 text-end">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

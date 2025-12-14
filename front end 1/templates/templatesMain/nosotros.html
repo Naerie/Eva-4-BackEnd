@@ -1,0 +1,30 @@
+{% extends 'templatesMain/base-cliente.html' %}
+{% load static %}
+
+{% block title %}SOBRE NOSOTROS{% endblock %}
+
+{% block content %}
+<section class="section-hero text-center">
+  <div class="container">
+    <h1 class="display-5 fw-bold text-white mb-2">SOBRE SERVICOPIAPO</h1>
+    <p class="lead text-light">Conoce nuestra historia, misión y visión</p>
+  </div>
+</section>
+
+<section class="section-content about-clean">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <h2 class="section-subtitle mb-3">Quiénes somos</h2>
+        <p class="mb-5">{{ texto|linebreaksbr }}</p>
+
+        <h2 class="section-subtitle mb-3">Misión</h2>
+        <p class="mb-5">{{ Mision|linebreaksbr }}</p>
+
+        <h2 class="section-subtitle mb-3">Visión</h2>
+        <p>{{ Vision|linebreaksbr }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

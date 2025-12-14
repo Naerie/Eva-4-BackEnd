@@ -1,0 +1,274 @@
+:root {
+    --azul: #00285D;
+    --naranjo: #D45831;
+    --blanco: #ffffff;
+    --gris-fondo: #ffffff;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--gris-fondo);
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: var(--azul);
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,.18);
+}
+
+.navbar-brand {
+    color: var(--blanco) !important;
+    letter-spacing: 0.5px;
+}
+
+.navbar .nav-link {
+    color: var(--blanco);
+    font-weight: 500;
+    text-transform: uppercase;
+    margin: 0 8px;
+    transition: color 0.3s ease, border-bottom 0.2s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: var(--naranjo);
+    border-bottom: 2px solid var(--naranjo);
+}
+
+.dropdown-menu {
+    font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+    background-color: var(--naranjo);
+    color: var(--blanco);
+}
+
+/* ======== CONTENT ======== */
+section.container,
+section.container-fluid {
+    max-width: 100%;
+    padding: 3rem 4rem;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* ======== FOOTER ======== */
+.footer {
+    background-color: var(--azul);
+}
+
+.footer-link {
+    color: #ffffffcc;
+    text-decoration: none;
+}
+
+.footer-link:hover {
+    color: var(--naranjo);
+}
+
+.footer i {
+    color: var(--naranjo);
+}
+
+
+/* ======== BARRA DE BÚSQUEDA (full-width) ======== */
+section.search-section {
+    width: 100%;
+    background-color: var(--azul) !important;
+    color: var(--blanco) !important;
+    padding: 1.5rem 0 !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15) !important;
+    position: relative;
+    z-index: 2;
+}
+
+/* inputs de la barra (selects) */
+section.search-section .form-select {
+    min-width: 220px;
+    height: 48px;
+    border-radius: 12px !important;
+    border: none !important;
+    background: var(--blanco) !important;
+    color: #333 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08) !important;
+}
+
+section.search-section .form-select:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 0.25rem rgba(212, 88, 49, 0.25) !important;
+}
+
+/* botones */
+section.search-section .btn.btn-naranjo {
+    background: var(--naranjo) !important;
+    border: none !important;
+    color: var(--blanco) !important;
+    padding: 0.6rem 1.25rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 14px rgba(212, 88, 49, 0.35) !important;
+}
+section.search-section .btn.btn-naranjo:hover { filter: brightness(0.95); }
+
+section.search-section .btn.btn-outline-light {
+    border-radius: 12px !important;
+    border-width: 2px !important;
+}
+
+/* ======== NEWSLETTER (full-width) ======== */
+section.newsletter-section {
+    width: 100%;
+    padding: 3rem 0 !important;
+    background: linear-gradient(180deg, #F4F7FC 0%, #FFFFFF 100%) !important;
+    border-top: 1px solid #e9eef7 !important;
+    border-bottom: 1px solid #e9eef7 !important;
+}
+
+section.newsletter-section .newsletter-title {
+    color: var(--azul) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.5rem !important;
+}
+
+section.newsletter-section .newsletter-text {
+    color: #475569 !important;
+    margin-bottom: 1rem !important;
+    max-width: 56ch;
+}
+
+/* formulario newsletter */
+section.newsletter-section .newsletter-form {
+    display: flex !important;
+    gap: 0.75rem !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+/* el input que viene de {{ form.emailSus }} */
+section.newsletter-section input,
+section.newsletter-section .form-control,
+section.newsletter-section input[type="email"] {
+    flex: 1 1 260px !important;
+    min-width: 240px !important;
+    height: 52px !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #dbe4f0 !important;
+    background: #fff !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,.04) !important;
+}
+
+section.newsletter-section input:focus,
+section.newsletter-section .form-control:focus {
+    outline: none !important;
+    border-color: var(--azul) !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 40, 93, 0.18) !important;
+}
+
+/* botón newsletter reutiliza .btn-naranjo, por si acaso fuerza aquí también */
+section.newsletter-section .btn.btn-naranjo {
+    background: var(--naranjo) !important;
+    color: var(--blanco) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.8rem 1.25rem !important;
+}
+
+/* ======== helpers responsivos ======== */
+@media (max-width: 576px) {
+    section.search-section .form-select {
+    min-width: 100% !important;
+    }
+    section.newsletter-section .newsletter-form {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    }
+    section.newsletter-section .newsletter-form .btn {
+    width: 100% !important;
+    }
+}
+
+/* ======== SECCIONES COMUNES ======== */
+.section-hero {
+    width: 100%;
+    background-color: var(--azul);
+    color: var(--blanco);
+    padding: 3.5rem 0 2.5rem;
+    border-top: 4px solid var(--naranjo);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.section-content {
+    background-color: var(--blanco);
+    padding: 4rem 0;
+}
+
+/* Tarjetas/bloques de contenido “corporativos” */
+.section-card {
+    background: var(--blanco);
+    padding: 2rem 2.5rem;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border-top: 3px solid var(--naranjo);
+}
+
+/* Títulos secundarios internos */
+.section-subtitle {
+    color: var(--azul);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--naranjo);
+    padding-left: 0.75rem;
+}
+
+/* Formularios con mismo look en todas las páginas */
+.form-styled label {
+    font-weight: 600;
+    color: var(--azul);
+}
+
+.form-styled input,
+.form-styled textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid #dbe4f0;
+    box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+}
+
+.form-styled textarea { resize: none; height: 140px; }
+
+.form-styled input:focus,
+.form-styled textarea:focus {
+    outline: none;
+    border-color: var(--naranjo);
+    box-shadow: 0 0 0 0.25rem rgba(212, 88, 49, 0.25);
+}
+
+/* Botón marca (ya lo usas) */
+.btn-naranjo {
+    background: var(--naranjo);
+    border: none;
+    color: var(--blanco);
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 14px rgba(212, 88, 49, 0.35);
+    transition: all 0.3s ease;
+}
+.btn-naranjo:hover { filter: brightness(0.95); transform: translateY(-1px); }
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .section-hero { padding: 2.5rem 1rem; }
+    .section-hero h1 { font-size: 1.9rem; }
+    .section-card { padding: 1.5rem; }
+}
