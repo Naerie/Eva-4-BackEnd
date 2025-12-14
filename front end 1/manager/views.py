@@ -4,59 +4,68 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from manager import forms
-from main.models import Contacto, Cliente, Suscripcion, Interes
-from manager.models import Propiedad, TiposPropiedades, Comunas, EstadosPropiedades, OperacionesPropiedades
+#from main.models import Contacto, Cliente, Suscripcion, Interes
+#from manager.models import Propiedad, TiposPropiedades, Comunas, EstadosPropiedades, OperacionesPropiedades
+import requests
+from django.conf import settings
+
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def registro(request):
-    formulario = forms.FormRegistrarP()
+    form = forms.FormRegistrarP()
+
     if request.method == 'POST':
-        formulario = forms.FormRegistrarP(request.POST, request.FILES)
-        if formulario.is_valid():
-            print('formulario de registro de propiedades valido')
-            formulario.save()
+        form = forms.FormRegistrarP(request.POST, request.FILES)
+        if form.is_valid():
+            requests.post(
+                f"{settings.API_BASE_URL}/propiedades/",
+                data=form.cleaned_data,
+                files=request.FILES
+            )
             return redirect('listado-propiedades')
-    data = {'form' : formulario}
-    return render(request, 'templatesManager/registrarPropiedades.html', data)
+
+    return render(request, 'templatesManager/registrarPropiedades.html', {'form': form})
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def verPropiedades(request):
-    propiedades = []
-    for prop in Propiedad.objects.all():
-        propiedades.append({
-            'obj': prop,
-            'form': forms.FormRegistrarP(instance=prop)  # formulario precargado
-        })
+    propiedades = requests.get(
+        f"{settings.API_BASE_URL}/propiedades/"
+    ).json()
 
     return render(request, 'templatesManager/propiedades.html', {
         'propiedades': propiedades
     })
 
+
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def eliminarPropiedad(request, id):
-    propiedad = get_object_or_404(Propiedad, id=id)
-    propiedad.delete()  
-    return redirect('listado-propiedades')  
+    requests.delete(
+        f"{settings.API_BASE_URL}/propiedades/{id}/"
+    )
+    return redirect('listado-propiedades')
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def actualizarPropiedades(request, id):
-    # ACTUALIZAR
-    propiedad = get_object_or_404(Propiedad, id=id)
     if request.method == 'POST':
-        form = forms.FormRegistrarP(request.POST, request.FILES, instance=propiedad)
+        form = forms.FormRegistrarP(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('listado-propiedades') 
-    else:
-        form = forms.FormRegistrarP(instance=propiedad)
+            requests.put(
+                f"{settings.API_BASE_URL}/propiedades/{id}/",
+                data=form.cleaned_data,
+                files=request.FILES
+            )
+            return redirect('listado-propiedades')
 
-    data = {'form' : form,
-            'propiedad':propiedad}
-    return render(request, 'templatesManager/propiedades.html', data)
+    return redirect('listado-propiedades')
+
+
 
 
 def logIn(request):
@@ -80,19 +89,28 @@ def homeManager(request):
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def verMensajes(request):
-    contacto = Contacto.objects.all()
-    return render(request, 'templatesManager/contacto-admin.html', {'contacto':contacto})
+    contacto = requests.get(
+        f"{settings.API_BASE_URL}/contactos/"
+    ).json()
+
+    return render(request, 'templatesManager/contacto-admin.html', {
+        'contacto': contacto
+    })
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def eliminarMensaje(request, id):
-    propiedad = get_object_or_404(Contacto, id=id)
-    propiedad.delete()  
+    requests.delete(
+        f"{settings.API_BASE_URL}/contactos/{id}/"
+    )
     return redirect('ver-contacto')  
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
-def gestionar(request):        
+def gestionar(request):
+
     formTipos = forms.FormTiposPropiedades()
     formEstados = forms.FormEstadosPropiedades()
     formOpe = forms.FormOperacionesPropiedades()
@@ -104,34 +122,46 @@ def gestionar(request):
         if form_name == 'tipos':
             formTipos = forms.FormTiposPropiedades(request.POST)
             if formTipos.is_valid():
-                formTipos.save()
+                requests.post(
+                    f"{settings.API_BASE_URL}/tipos-propiedad/",
+                    json=formTipos.cleaned_data
+                )
                 return redirect('gestion')
 
         elif form_name == 'estados':
             formEstados = forms.FormEstadosPropiedades(request.POST)
             if formEstados.is_valid():
-                formEstados.save()
+                requests.post(
+                    f"{settings.API_BASE_URL}/estados/",
+                    json=formEstados.cleaned_data
+                )
                 return redirect('gestion')
 
         elif form_name == 'operaciones':
             formOpe = forms.FormOperacionesPropiedades(request.POST)
             if formOpe.is_valid():
-                formOpe.save()
+                requests.post(
+                    f"{settings.API_BASE_URL}/operaciones/",
+                    json=formOpe.cleaned_data
+                )
                 return redirect('gestion')
 
         elif form_name == 'comunas':
             formComuna = forms.FormComunas(request.POST)
             if formComuna.is_valid():
-                formComuna.save()
+                requests.post(
+                    f"{settings.API_BASE_URL}/comunas/",
+                    json=formComuna.cleaned_data
+                )
                 return redirect('gestion')
 
-    # recuperar los registros
-    tipos = TiposPropiedades.objects.all()
-    operaciones = OperacionesPropiedades.objects.all()
-    comunas = Comunas.objects.all()
-    estados = EstadosPropiedades.objects.all()
+    # 🔥 LISTAR DESDE API (NO ORM)
+    tipos = requests.get(f"{settings.API_BASE_URL}/tipos-propiedad/").json()
+    operaciones = requests.get(f"{settings.API_BASE_URL}/operaciones/").json()
+    comunas = requests.get(f"{settings.API_BASE_URL}/comunas/").json()
+    estados = requests.get(f"{settings.API_BASE_URL}/estados/").json()
 
-    data = {
+    return render(request, 'templatesManager/gestionar.html', {
         'formT': formTipos,
         'formE': formEstados,
         'formO': formOpe,
@@ -140,53 +170,47 @@ def gestionar(request):
         'operaciones': operaciones,
         'comunas': comunas,
         'estados': estados,
-    }
-    return render(request, 'templatesManager/gestionar.html', data)
+    })
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
-def eliminarGestion(request, id, campo): 
-    if campo == 'tipo':
-        objeto = get_object_or_404(TiposPropiedades, id=id)
-    elif campo == 'estado':
-        objeto = get_object_or_404(EstadosPropiedades, id=id)
-    elif campo == 'operacion':
-        objeto = get_object_or_404(OperacionesPropiedades, id=id)
-    elif campo == 'comuna':
-        objeto = get_object_or_404(Comunas, id=id)
-    else:
-        return redirect('gestion')
-    
-    objeto.delete()
+def eliminarGestion(request, id, campo):
+    endpoint = {
+        'tipo': 'tipos-propiedad',
+        'estado': 'estados',
+        'operacion': 'operaciones',
+        'comuna': 'comunas'
+    }.get(campo)
+
+    if endpoint:
+        requests.delete(
+            f"{settings.API_BASE_URL}/{endpoint}/{id}/"
+        )
+
     return redirect('gestion')
+
     
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def actualizarGestion(request, campo, id):
-    if campo == 'tipo':
-        objeto = get_object_or_404(TiposPropiedades, id=id)
-        form = forms.FormTiposPropiedades
-    elif campo == 'estado':
-        objeto = get_object_or_404(EstadosPropiedades, id=id)
-        form = forms.FormEstadosPropiedades
-    elif campo == 'operacion':
-        objeto = get_object_or_404(OperacionesPropiedades, id=id)
-        form = forms.FormOperacionesPropiedades
-    elif campo == 'comuna':
-        objeto = get_object_or_404(Comunas, id=id)
-        form = forms.FormComunas
-    else:
-        return redirect('gestion')
 
-    if request.method == 'POST':
-        form = form(request.POST, instance=objeto)
-        if form.is_valid():
-            form.save()
-            return redirect('gestion')
-    else:
-        form = form(instance=objeto)
-        return redirect('gestion')
+    endpoint = {
+        'tipo': 'tipos-propiedad',
+        'estado': 'estados',
+        'operacion': 'operaciones',
+        'comuna': 'comunas'
+    }.get(campo)
+
+    if request.method == 'POST' and endpoint:
+        requests.put(
+            f"{settings.API_BASE_URL}/{endpoint}/{id}/",
+            json=request.POST.dict()
+        )
+
+    return redirect('gestion')
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
@@ -197,18 +221,31 @@ def cerrar_sesion(request):
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def Intereses(request):
-    intereses = Interes.objects.select_related('cliente', 'propiedad').all()
-    return render(request, 'templatesManager/interes.html', {'intereses': intereses})
+    intereses = requests.get(
+        f"{settings.API_BASE_URL}/intereses/"
+    ).json()
+
+    return render(request, 'templatesManager/interes.html', {
+        'intereses': intereses
+    })
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def eliminarInteres(request, id):
-    interes = get_object_or_404(Interes, id=id)
-    interes.delete()
-    return redirect('tabla-interes') 
+    requests.delete(
+        f"{settings.API_BASE_URL}/intereses/{id}/"
+    )
+    return redirect('tabla-interes')
+
 
 @login_required(login_url='login-admin')
 @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def verSuscripciones(request):
-    sus = Suscripcion.objects.all()
-    return render(request, 'templatesManager/suscripciones.html', {'suscripciones':sus})
+    suscripciones = requests.get(
+        f"{settings.API_BASE_URL}/suscripciones/"
+    ).json()
+
+    return render(request, 'templatesManager/suscripciones.html', {
+        'suscripciones': suscripciones
+    })
