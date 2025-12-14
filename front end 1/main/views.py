@@ -4,13 +4,9 @@ from main import forms
 import requests
 #from manager.models import Propiedad, OperacionesPropiedades, TiposPropiedades, Comunas, EstadosPropiedades
 #from main.models import Cliente, Interes
-
+from django.conf import settings
 #datos.py
 from datos import about
-
-API_BASE = "http://127.0.0.1:8000/api"
-
-
 # Create your views here.
 
 def index(request):
@@ -24,14 +20,14 @@ def index(request):
         params['comuna'] = request.GET.get('comuna')
 
     propiedades = requests.get(
-        f"{API_BASE}/propiedades/",
+        f"{settings.API_BASE_URL}/propiedades/",
         params=params
     ).json()
 
     # selects
-    operaciones = requests.get(f"{API_BASE}/operaciones/").json()
-    tipos = requests.get(f"{API_BASE}/tipos-propiedad/").json()
-    comunas = requests.get(f"{API_BASE}/comunas/").json()
+    operaciones = requests.get(f"{settings.API_BASE_URL}/operaciones/").json()
+    tipos = requests.get(f"{settings.API_BASE_URL}/tipos-propiedad/").json()
+    comunas = requests.get(f"{settings.API_BASE_URL}/comunas/").json()
 
     # suscripción
     formulario = forms.FormSuscripcion()
@@ -39,7 +35,7 @@ def index(request):
         formulario = forms.FormSuscripcion(request.POST)
         if formulario.is_valid():
             requests.post(
-                f"{API_BASE}/suscripciones/",
+                f"{settings.API_BASE_URL}/suscripciones/",
                 json=formulario.cleaned_data
             )
             return redirect('home')
@@ -56,11 +52,14 @@ def index(request):
 
 
 def propiedad(request, slug):
-    propiedades = requests.get(f"{API_BASE}/propiedades/").json()
-    propiedad = next((p for p in propiedades if p['slug'] == slug), None)
+    response = requests.get(
+        f"{settings.API_BASE_URL}/propiedades/{slug}/"
+    )
 
-    if not propiedad:
+    if response.status_code != 200:
         return redirect('home')
+
+    propiedad = response.json()
 
     formulario = forms.FormCliente()
 
@@ -68,7 +67,7 @@ def propiedad(request, slug):
         formulario = forms.FormCliente(request.POST)
         if formulario.is_valid():
             requests.post(
-                f"{API_BASE}/clientes/",
+                f"{settings.API_BASE_URL}/clientes/",
                 json=formulario.cleaned_data
             )
             return redirect('c-success')
@@ -77,6 +76,7 @@ def propiedad(request, slug):
         'propiedad': propiedad,
         'form': formulario
     })
+
 
 
 
@@ -92,7 +92,7 @@ def contacto(request):
         formulario = forms.FormContacto(request.POST)
         if formulario.is_valid():
             requests.post(
-                f"{API_BASE}/contactos/",
+                f"{settings.API_BASE_URL}/contactos/",
                 json=formulario.cleaned_data
             )
             return redirect('c-success')

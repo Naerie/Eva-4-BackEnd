@@ -27,32 +27,35 @@ class PropiedadList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class PropiedadDetail(APIView):
-    parser_classes = [MultiPartParser, FormParser]
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from main.models import Propiedad
+from main.serializers import PropiedadSerializer
 
-    def get_object(self, pk):
+class PropiedadDetail(APIView):
+
+    def get_object(self, slug):
         try:
-            return Propiedad.objects.get(pk=pk)
+            return Propiedad.objects.get(slug=slug)
         except Propiedad.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk):
-        serializer = PropiedadSerializer(self.get_object(pk))
+    def get(self, request, slug):
+        propiedad = self.get_object(slug)
+        serializer = PropiedadSerializer(propiedad)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        serializer = PropiedadSerializer(
-            self.get_object(pk),
-            data=request.data
-        )
+    def put(self, request, slug):
+        propiedad = self.get_object(slug)
+        serializer = PropiedadSerializer(propiedad, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=400)
 
-    def delete(self, request, pk):
-        self.get_object(pk).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, slug):
+        propiedad = self.get_object(slug)
+        propiedad.delete()
+        return Response(status=204)
 
 
 class TipoPropiedadList(APIView):
