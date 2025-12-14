@@ -1,1 +1,8 @@
 /env
+/api/main/migrations
+/api/main/__pycache__
+/api/api/__pycache__
+/api/api/__pycache__
+/api/api/__pycache__
+api/api/__pycache__/urls.cpython-312.pyc
+/api/api/__pycache__

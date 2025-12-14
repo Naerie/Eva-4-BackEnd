@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "db_backend",
         'USER': 'root',
-        'PASSWORD':'backend123456',
+        'PASSWORD':'K_123456',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
@@ -126,3 +126,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',  # 👈 ESTE
+    ],
+}

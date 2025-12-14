@@ -132,7 +132,7 @@ class Suscripcion(models.Model):
 
 class Interes(models.Model):
     cliente = models.ForeignKey('main.Cliente', on_delete=models.CASCADE, related_name='intereses')
-    propiedad = models.ForeignKey('manager.Propiedad', on_delete=models.CASCADE, related_name='intereses')
+    propiedad = models.ForeignKey('main.Propiedad', on_delete=models.CASCADE, related_name='intereses')
     creado = models.DateField(auto_now_add=True)
     def __str__(self):
         return f"{self.cliente} → {self.propiedad}"
