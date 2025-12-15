@@ -130,17 +130,17 @@
         </p>
       </div>
       <div class="col-12 col-lg-5">
-        <form method="POST" action="#" id="formSuscripcion" class="newsletter-form">
+        <form method="POST" id="formSuscripcion" class="newsletter-form">
           {% csrf_token %}
-          <!-- tu campo ya viene del form; lo envolvemos y estilizamos por CSS -->
           {{ form.emailSus }}
-          <button class="btn btn-naranjo btn-lg w-auto" type="submit">Suscribirme</button>
+          <button class="btn btn-naranjo btn-lg" type="submit">
+            Suscribirme
+          </button>
         </form>
-        {% if form.emailSus.errors %}
-          <div class="text-danger small mt-2">
-            {{ form.emailSus.errors }}
-          </div>
-        {% endif %}
+
+        <div id="mensajeSuscripcion" class="small mt-2"></div>
+
+        
       </div>
     </div>
   </div>
@@ -149,4 +149,40 @@
 
 </div>
 
+
+<script>
+document.getElementById("formSuscripcion").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("id_emailSus").value;
+    const mensaje = document.getElementById("mensajeSuscripcion");
+
+    fetch("http://localhost:8000/api/suscripciones/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ emailSus: email })
+    })
+    .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok) {
+            mensaje.className = "text-danger small mt-2";
+            mensaje.innerText = data.emailSus
+                ? data.emailSus[0]
+                : "Error al suscribirse";
+        } else {
+            mensaje.className = "text-success small mt-2";
+            mensaje.innerText = "¡Gracias por suscribirte!";
+            document.getElementById("formSuscripcion").reset();
+        }
+    })
+    .catch(() => {
+        mensaje.className = "text-danger small mt-2";
+        mensaje.innerText = "Error de conexión con el servidor.";
+    });
+});
+</script>
 {% endblock %}

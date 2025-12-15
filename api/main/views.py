@@ -257,6 +257,7 @@ class ClienteDetail(APIView):
         return Response(status=204)
 
 class SuscripcionList(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = SuscripcionSerializer(data=request.data)
