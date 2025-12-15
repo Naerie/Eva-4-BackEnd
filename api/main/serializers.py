@@ -5,11 +5,11 @@ import re
 
 
 class PropiedadSerializer(serializers.ModelSerializer):
+    thumb = serializers.ImageField(use_url=True)  # Asegurarse de que el campo 'thumb' esté correctamente definido.
+
     class Meta:
         model = Propiedad
         fields = '__all__'
-        thumb = serializers.ImageField(use_url=True)
-
 
     # VALIDACIONES PERSONALIZADAS
     def validate(self, data):
@@ -35,13 +35,14 @@ class PropiedadSerializer(serializers.ModelSerializer):
     def validate_precio(self, value):
         try:
             valor = float(value)
-        except:
+        except ValueError:
             raise serializers.ValidationError("El precio debe ser un número válido.")
 
         if valor <= 0:
             raise serializers.ValidationError("El precio debe ser mayor a 0.")
 
         return value
+
 
 
 class TipoPropiedadSerializer(serializers.ModelSerializer):
@@ -55,6 +56,7 @@ class TipoPropiedadSerializer(serializers.ModelSerializer):
         return value
 
 
+
 class EstadoPropiedadSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstadosPropiedades
@@ -64,6 +66,7 @@ class EstadoPropiedadSerializer(serializers.ModelSerializer):
         if EstadosPropiedades.objects.filter(estado=value).exists():
             raise serializers.ValidationError("Ese registro ya existe en la base de datos.")
         return value
+
 
 
 class OperacionPropiedadSerializer(serializers.ModelSerializer):
@@ -112,6 +115,7 @@ class ContactoSerializer(serializers.ModelSerializer):
         return value
 
 
+
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
@@ -139,7 +143,7 @@ class ClienteSerializer(serializers.ModelSerializer):
 class SuscripcionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Suscripcion
-        fields = ['emailSus']
+        fields = '__all__'
 
     def validate_emailSus(self, value):
         patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'

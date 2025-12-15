@@ -198,6 +198,7 @@ class ComunaDetail(APIView):
 
 
 class ContactoList(APIView):
+    permission_classes = [AllowAny]
 
     def get(self, request):
         serializer = ContactoSerializer(
@@ -259,9 +260,15 @@ class ClienteDetail(APIView):
 class SuscripcionList(APIView):
     permission_classes = [AllowAny]
 
+    def get(self, request):
+        suscripciones = Suscripcion.objects.all()
+        serializer = SuscripcionSerializer(suscripciones, many=True)
+        return Response(serializer.data)
+
     def post(self, request):
         serializer = SuscripcionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+

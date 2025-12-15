@@ -9,6 +9,8 @@ from manager import forms
 import requests
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from manager.utils import auth_headers
+
 
 
 @login_required(login_url='login-admin')
@@ -21,7 +23,7 @@ def registro(request):
             requests.post(
                 f"{settings.API_BASE_URL}/propiedades/",
                 data=form.cleaned_data,
-                files=request.FILES
+                files=request.FILES, headers=auth_headers(request)
             )
             return redirect('listado-propiedades')
 
@@ -30,7 +32,7 @@ def registro(request):
 @login_required(login_url='login-admin')
 def verPropiedades(request):
     propiedades = requests.get(
-        f"{settings.API_BASE_URL}/propiedades/"
+        f"{settings.API_BASE_URL}/propiedades/", headers=auth_headers(request)
     ).json()
 
     return render(request, 'templatesManager/propiedades.html', {
@@ -40,7 +42,7 @@ def verPropiedades(request):
 @login_required(login_url='login-admin')
 def eliminarPropiedad(request, id):
     requests.delete(
-        f"{settings.API_BASE_URL}/propiedades/{id}/"
+        f"{settings.API_BASE_URL}/propiedades/{id}/", headers=auth_headers(request)
     )
     return redirect('listado-propiedades')
 
@@ -52,33 +54,38 @@ def actualizarPropiedades(request, id):
             requests.put(
                 f"{settings.API_BASE_URL}/propiedades/{id}/",
                 data=form.cleaned_data,
-                files=request.FILES
+                files=request.FILES, headers=auth_headers(request)
+
             )
             return redirect('listado-propiedades')
 
     return redirect('listado-propiedades')
 
 
-
-
-
 def logIn(request):
     if request.method == 'POST':
-        user = authenticate(
-            request,
-            username=request.POST['username'],
-            password=request.POST['password']
+        username = request.POST['username']
+        password = request.POST['password']
+
+        response = requests.post(
+            f"{settings.API_BASE_URL}/token/",
+            json={
+                "username": username,
+                "password": password
+            }
         )
 
-        if user:
-            login(request, user)
+        if response.status_code == 200:
+            token = response.json()['access']
+
+            # 🔐 GUARDAR TOKEN EN SESIÓN
+            request.session['token'] = token
+
             return redirect('home-manager')
 
         messages.error(request, 'Usuario o contraseña incorrectos')
 
     return render(request, 'templatesManager/login.html')
-
-
 
 
 @login_required(login_url='login-admin')
@@ -88,7 +95,7 @@ def homeManager(request):
 @login_required(login_url='login-admin')
 def verMensajes(request):
     contacto = requests.get(
-        f"{settings.API_BASE_URL}/contactos/"
+        f"{settings.API_BASE_URL}/contactos/",headers=auth_headers(request)
     ).json()
 
     return render(request, 'templatesManager/contacto-admin.html', {
@@ -98,7 +105,7 @@ def verMensajes(request):
 @login_required(login_url='login-admin')
 def eliminarMensaje(request, id):
     requests.delete(
-        f"{settings.API_BASE_URL}/contactos/{id}/"
+        f"{settings.API_BASE_URL}/contactos/{id}/",headers=auth_headers(request)
     )
     return redirect('ver-contacto')  
 
@@ -118,7 +125,7 @@ def gestionar(request):
             if formTipos.is_valid():
                 requests.post(
                     f"{settings.API_BASE_URL}/tipos-propiedad/",
-                    json=formTipos.cleaned_data
+                    json=formTipos.cleaned_data, headers=auth_headers(request)
                 )
                 return redirect('gestion')
 
@@ -127,7 +134,7 @@ def gestionar(request):
             if formEstados.is_valid():
                 requests.post(
                     f"{settings.API_BASE_URL}/estados/",
-                    json=formEstados.cleaned_data
+                    json=formEstados.cleaned_data, headers=auth_headers(request)
                 )
                 return redirect('gestion')
 
@@ -136,7 +143,7 @@ def gestionar(request):
             if formOpe.is_valid():
                 requests.post(
                     f"{settings.API_BASE_URL}/operaciones/",
-                    json=formOpe.cleaned_data
+                    json=formOpe.cleaned_data, headers=auth_headers(request)
                 )
                 return redirect('gestion')
 
@@ -145,7 +152,7 @@ def gestionar(request):
             if formComuna.is_valid():
                 requests.post(
                     f"{settings.API_BASE_URL}/comunas/",
-                    json=formComuna.cleaned_data
+                    json=formComuna.cleaned_data ,headers=auth_headers(request)
                 )
                 return redirect('gestion')
 
@@ -177,7 +184,7 @@ def eliminarGestion(request, id, campo):
 
     if endpoint:
         requests.delete(
-            f"{settings.API_BASE_URL}/{endpoint}/{id}/"
+            f"{settings.API_BASE_URL}/{endpoint}/{id}/", headers=auth_headers(request)
         )
 
     return redirect('gestion')
@@ -218,14 +225,14 @@ def Intereses(request):
 @login_required(login_url='login-admin')
 def eliminarInteres(request, id):
     requests.delete(
-        f"{settings.API_BASE_URL}/intereses/{id}/"
+        f"{settings.API_BASE_URL}/intereses/{id}/",headers=auth_headers(request)
     )
     return redirect('tabla-interes')
 
 @login_required(login_url='login-admin')
 def verSuscripciones(request):
     suscripciones = requests.get(
-        f"{settings.API_BASE_URL}/suscripciones/"
+        f"{settings.API_BASE_URL}/suscripciones/",headers=auth_headers(request)
     ).json()
 
     return render(request, 'templatesManager/suscripciones.html', {
