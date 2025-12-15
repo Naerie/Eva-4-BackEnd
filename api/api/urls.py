@@ -11,6 +11,13 @@ from main.views import (
     SuscripcionList
 )
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+
+
 urlpatterns = [
     # PROPIEDADES (slug)
     path('api/propiedades/', PropiedadList.as_view()),
@@ -42,4 +49,7 @@ urlpatterns = [
 
     # SUSCRIPCIONES
     path('api/suscripciones/', SuscripcionList.as_view()),
+
+    path('token/', TokenObtainPairView.as_view()),
+    path('token/refresh/', TokenRefreshView.as_view()),
 ]

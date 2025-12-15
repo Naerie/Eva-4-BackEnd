@@ -11,8 +11,6 @@ from django.conf import settings
 
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def registro(request):
     form = forms.FormRegistrarP()
 
@@ -29,8 +27,6 @@ def registro(request):
     return render(request, 'templatesManager/registrarPropiedades.html', {'form': form})
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def verPropiedades(request):
     propiedades = requests.get(
         f"{settings.API_BASE_URL}/propiedades/"
@@ -41,8 +37,6 @@ def verPropiedades(request):
     })
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def eliminarPropiedad(request, id):
     requests.delete(
         f"{settings.API_BASE_URL}/propiedades/{id}/"
@@ -50,8 +44,6 @@ def eliminarPropiedad(request, id):
     return redirect('listado-propiedades')
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def actualizarPropiedades(request, id):
     if request.method == 'POST':
         form = forms.FormRegistrarP(request.POST, request.FILES)
@@ -70,24 +62,33 @@ def actualizarPropiedades(request, id):
 
 def logIn(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None and (user.is_staff or user.is_superuser):
-            login(request, user)
-            return redirect('home-manager')  
-        else:
-            messages.error(request, 'Credenciales inválidas o sin permisos.')
+        username = request.POST['username']
+        password = request.POST['password']
+
+        response = requests.post(
+            f"{settings.API_BASE_URL}/token/",
+            json={
+                "username": username,
+                "password": password
+            }
+        )
+
+        if response.status_code == 200:
+            token = response.json()['access']
+            request.session['token'] = token
+            return redirect('home-manager')
+
+        messages.error(request, 'Usuario o contraseña incorrectos')
+
     return render(request, 'templatesManager/login.html')
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
+
+
 def homeManager(request):
     return render(request, 'templatesManager/manage.html')
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
+
 def verMensajes(request):
     contacto = requests.get(
         f"{settings.API_BASE_URL}/contactos/"
@@ -98,17 +99,12 @@ def verMensajes(request):
     })
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def eliminarMensaje(request, id):
     requests.delete(
         f"{settings.API_BASE_URL}/contactos/{id}/"
     )
     return redirect('ver-contacto')  
 
-
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def gestionar(request):
 
     formTipos = forms.FormTiposPropiedades()
@@ -173,8 +169,6 @@ def gestionar(request):
     })
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def eliminarGestion(request, id, campo):
     endpoint = {
         'tipo': 'tipos-propiedad',
@@ -191,9 +185,6 @@ def eliminarGestion(request, id, campo):
     return redirect('gestion')
 
     
-
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def actualizarGestion(request, campo, id):
 
     endpoint = {
@@ -212,14 +203,10 @@ def actualizarGestion(request, campo, id):
     return redirect('gestion')
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def cerrar_sesion(request):
     logout(request)
     return redirect('login-admin')
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def Intereses(request):
     intereses = requests.get(
         f"{settings.API_BASE_URL}/intereses/"
@@ -230,8 +217,6 @@ def Intereses(request):
     })
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def eliminarInteres(request, id):
     requests.delete(
         f"{settings.API_BASE_URL}/intereses/{id}/"
@@ -239,8 +224,6 @@ def eliminarInteres(request, id):
     return redirect('tabla-interes')
 
 
-@login_required(login_url='login-admin')
-@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='login-admin')
 def verSuscripciones(request):
     suscripciones = requests.get(
         f"{settings.API_BASE_URL}/suscripciones/"

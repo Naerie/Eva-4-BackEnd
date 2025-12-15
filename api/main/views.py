@@ -10,24 +10,27 @@ from main.models import Propiedad, Cliente, Comunas, Contacto, TiposPropiedades,
 
 from main.serializers import PropiedadSerializer, ClienteSerializer, ComunaSerializer, ContactoSerializer,TipoPropiedadSerializer, EstadoPropiedadSerializer,OperacionPropiedadSerializer, SuscripcionSerializer
 
-# Create your views here.
+from rest_framework.permissions import AllowAny, IsAdminUser
+
 class PropiedadList(APIView):
     parser_classes = [MultiPartParser, FormParser]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAdminUser()]
 
     def get(self, request):
         propiedades = Propiedad.objects.all()
 
-        # 🔥 FILTROS DESDE EL FRONT
         operacion = request.GET.get('operacion')
         tipo = request.GET.get('tipo_propiedad')
         comuna = request.GET.get('comuna')
 
         if operacion:
             propiedades = propiedades.filter(operacion_id=operacion)
-
         if tipo:
             propiedades = propiedades.filter(tipo_propiedad_id=tipo)
-
         if comuna:
             propiedades = propiedades.filter(comuna_id=comuna)
 
@@ -38,13 +41,17 @@ class PropiedadList(APIView):
         serializer = PropiedadSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 
 class PropiedadDetail(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAdminUser()]
 
     def get_object(self, slug):
         try:
@@ -53,22 +60,23 @@ class PropiedadDetail(APIView):
             raise Http404
 
     def get(self, request, slug):
-        propiedad = self.get_object(slug)
-        serializer = PropiedadSerializer(propiedad)
+        serializer = PropiedadSerializer(self.get_object(slug))
         return Response(serializer.data)
 
     def put(self, request, slug):
-        propiedad = self.get_object(slug)
-        serializer = PropiedadSerializer(propiedad, data=request.data)
+        serializer = PropiedadSerializer(
+            self.get_object(slug),
+            data=request.data
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
     def delete(self, request, slug):
-        propiedad = self.get_object(slug)
-        propiedad.delete()
+        self.get_object(slug).delete()
         return Response(status=204)
+
 
 
 class TipoPropiedadList(APIView):
