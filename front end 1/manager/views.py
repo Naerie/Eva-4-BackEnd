@@ -8,9 +8,10 @@ from manager import forms
 #from manager.models import Propiedad, TiposPropiedades, Comunas, EstadosPropiedades, OperacionesPropiedades
 import requests
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 
-
+@login_required(login_url='login-admin')
 def registro(request):
     form = forms.FormRegistrarP()
 
@@ -26,7 +27,7 @@ def registro(request):
 
     return render(request, 'templatesManager/registrarPropiedades.html', {'form': form})
 
-
+@login_required(login_url='login-admin')
 def verPropiedades(request):
     propiedades = requests.get(
         f"{settings.API_BASE_URL}/propiedades/"
@@ -36,14 +37,14 @@ def verPropiedades(request):
         'propiedades': propiedades
     })
 
-
+@login_required(login_url='login-admin')
 def eliminarPropiedad(request, id):
     requests.delete(
         f"{settings.API_BASE_URL}/propiedades/{id}/"
     )
     return redirect('listado-propiedades')
 
-
+@login_required(login_url='login-admin')
 def actualizarPropiedades(request, id):
     if request.method == 'POST':
         form = forms.FormRegistrarP(request.POST, request.FILES)
@@ -60,22 +61,17 @@ def actualizarPropiedades(request, id):
 
 
 
+
 def logIn(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-
-        response = requests.post(
-            f"{settings.API_BASE_URL}/token/",
-            json={
-                "username": username,
-                "password": password
-            }
+        user = authenticate(
+            request,
+            username=request.POST['username'],
+            password=request.POST['password']
         )
 
-        if response.status_code == 200:
-            token = response.json()['access']
-            request.session['token'] = token
+        if user:
+            login(request, user)
             return redirect('home-manager')
 
         messages.error(request, 'Usuario o contraseña incorrectos')
@@ -85,10 +81,11 @@ def logIn(request):
 
 
 
+@login_required(login_url='login-admin')
 def homeManager(request):
     return render(request, 'templatesManager/manage.html')
 
-
+@login_required(login_url='login-admin')
 def verMensajes(request):
     contacto = requests.get(
         f"{settings.API_BASE_URL}/contactos/"
@@ -98,13 +95,14 @@ def verMensajes(request):
         'contacto': contacto
     })
 
-
+@login_required(login_url='login-admin')
 def eliminarMensaje(request, id):
     requests.delete(
         f"{settings.API_BASE_URL}/contactos/{id}/"
     )
     return redirect('ver-contacto')  
 
+@login_required(login_url='login-admin')
 def gestionar(request):
 
     formTipos = forms.FormTiposPropiedades()
@@ -168,7 +166,7 @@ def gestionar(request):
         'estados': estados,
     })
 
-
+@login_required(login_url='login-admin')
 def eliminarGestion(request, id, campo):
     endpoint = {
         'tipo': 'tipos-propiedad',
@@ -184,7 +182,7 @@ def eliminarGestion(request, id, campo):
 
     return redirect('gestion')
 
-    
+@login_required(login_url='login-admin')
 def actualizarGestion(request, campo, id):
 
     endpoint = {
@@ -202,11 +200,12 @@ def actualizarGestion(request, campo, id):
 
     return redirect('gestion')
 
-
+@login_required(login_url='login-admin')
 def cerrar_sesion(request):
     logout(request)
     return redirect('login-admin')
 
+@login_required(login_url='login-admin')
 def Intereses(request):
     intereses = requests.get(
         f"{settings.API_BASE_URL}/intereses/"
@@ -216,14 +215,14 @@ def Intereses(request):
         'intereses': intereses
     })
 
-
+@login_required(login_url='login-admin')
 def eliminarInteres(request, id):
     requests.delete(
         f"{settings.API_BASE_URL}/intereses/{id}/"
     )
     return redirect('tabla-interes')
 
-
+@login_required(login_url='login-admin')
 def verSuscripciones(request):
     suscripciones = requests.get(
         f"{settings.API_BASE_URL}/suscripciones/"
