@@ -238,3 +238,4 @@ def verSuscripciones(request):
     return render(request, 'templatesManager/suscripciones.html', {
         'suscripciones': suscripciones
     })
+

@@ -27,11 +27,10 @@ class FormRegistrarP(forms.Form):
     logia = forms.BooleanField(required=False)
     amoblado = forms.BooleanField(required=False)
 
-    # IDs que vienen de la API
-    comuna = forms.IntegerField()
-    tipo_propiedad = forms.IntegerField()
-    operacion = forms.IntegerField()
-    estado = forms.IntegerField()
+    comuna = forms.ChoiceField(required=False)
+    tipo_propiedad = forms.ChoiceField(required=False)
+    operacion = forms.ChoiceField(required=False)
+    estado = forms.ChoiceField(required=False)
 
     def clean(self):
         cleaned = super().clean()
