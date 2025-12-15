@@ -50,15 +50,16 @@
 
       <!-- Tipo de propiedades -->
       <div class="col-12 col-md-auto">
-        <select class="form-select search-input" name="tipo">
+        <select class="form-select search-input" name="tipo_propiedad">
           <option value="">Tipo de inmueble</option>
           {% for t in tipos_propiedades %}
-            <option value="{{ t.id }}" {% if request.GET.tipo == t.id|stringformat:"s" %}selected{% endif %}>
+            <option value="{{ t.id }}"
+              {% if request.GET.tipo_propiedad == t.id|stringformat:"s" %}selected{% endif %}>
               {{ t.tipoPropiedad }}
             </option>
           {% endfor %}
         </select>
-      </div>
+
 
       <!-- Comuna -->
       <div class="col-12 col-md-auto">
@@ -93,7 +94,7 @@
       <div class="col-md-4 mb-4">
         <a href="{% url 'detalle-propiedad' p.slug %}" class="text-decoration-none text-dark">
           <div class="card h-100 shadow-sm border-0 rounded-3">
-            <img src="{{ p.thumb.url }}" class="card-img-top" alt="{{ p.titulo }}">
+            <img src="{{ p.thumb }}" class="card-img-top" alt="{{ p.titulo }}">
             <div class="card-body">
               <h5 class="card-title">{{ p.titulo }}</h5>
               {% if p.ubicacion %}

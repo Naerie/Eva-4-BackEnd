@@ -8,6 +8,8 @@ class PropiedadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Propiedad
         fields = '__all__'
+        thumb = serializers.ImageField(use_url=True)
+
 
     # VALIDACIONES PERSONALIZADAS
     def validate(self, data):

@@ -16,7 +16,7 @@
         <div id="propertyCarousel" class="carousel slide shadow rounded mb-4" data-bs-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <img src="{{ propiedad.thumb.url }}" class="d-block w-100 rounded" alt="{{ propiedad.titulo }}">
+              <img src="{{ propiedad.thumb }}" class="d-block w-100 rounded" alt="{{ propiedad.titulo }}">
             </div>
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
@@ -51,7 +51,7 @@
                 {% else %}
                 <p><strong>Estacionamientos:</strong> No</i></p>
                 {% endif %}
-                <p><strong>Fecha de publicación:</strong> {{ propiedad.fecha|date:"d/m/Y" }}</p>
+                <p><strong>Fecha de publicación:</strong> {{ propiedad.fecha }}</p>
               </div>
             </div>
           </div>

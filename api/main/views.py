@@ -8,7 +8,6 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 from main.models import Propiedad, Cliente, Comunas, Contacto, TiposPropiedades, EstadosPropiedades, OperacionesPropiedades, Suscripcion
 
-
 from main.serializers import PropiedadSerializer, ClienteSerializer, ComunaSerializer, ContactoSerializer,TipoPropiedadSerializer, EstadoPropiedadSerializer,OperacionPropiedadSerializer, SuscripcionSerializer
 
 # Create your views here.
@@ -17,6 +16,21 @@ class PropiedadList(APIView):
 
     def get(self, request):
         propiedades = Propiedad.objects.all()
+
+        # 🔥 FILTROS DESDE EL FRONT
+        operacion = request.GET.get('operacion')
+        tipo = request.GET.get('tipo_propiedad')
+        comuna = request.GET.get('comuna')
+
+        if operacion:
+            propiedades = propiedades.filter(operacion_id=operacion)
+
+        if tipo:
+            propiedades = propiedades.filter(tipo_propiedad_id=tipo)
+
+        if comuna:
+            propiedades = propiedades.filter(comuna_id=comuna)
+
         serializer = PropiedadSerializer(propiedades, many=True)
         return Response(serializer.data)
 
@@ -27,9 +41,8 @@ class PropiedadList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from main.models import Propiedad
-from main.serializers import PropiedadSerializer
+
+
 
 class PropiedadDetail(APIView):
 
